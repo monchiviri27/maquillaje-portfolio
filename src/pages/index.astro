@@ -1,0 +1,91 @@
+---
+// Importamos el layout que define el esqueleto
+import Layout from '../layouts/Layout.astro';
+// Importamos el componente Hero y otros que necesitaremos
+import HeroSection from '../components/HeroSection.astro';
+import Card from '../components/ui/Card.astro';
+import Button from '../components/ui/Button.astro'; 
+
+// Importamos la imagen para la sección de confianza (por ejemplo, un retrato de la maquilladora)
+import portraitImage from '../../public/assets/dos.jpg';
+import { Image } from 'astro:assets';
+---
+
+<Layout 
+    title="Andrea Bazurto | Maquilladora Profesional de Novias y Eventos"
+    description="Maquillaje de lujo para novias y eventos especiales en Madrid. Reserva tu consulta para un look elegante, duradero y a tu medida."
+>
+    <HeroSection 
+        headline="Belleza que Captura la Luz"
+        subtext="Especialista en looks nupciales y eventos con un enfoque en la elegancia atemporal y la piel radiante."
+        ctaText="Ver Portafolio de Novias"
+        ctaLink="/portfolio"
+    />
+
+    <section class="py-20 px-6 bg-white text-center">
+        <h2 class="text-4xl mb-12 title-font font-semibold">Nuestros Servicios Destacados</h2>
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <Card 
+                title="Maquillaje Nupcial"
+                description="El look perfecto para tu día más importante. Incluye prueba y productos de alta gama."
+                link="/servicios#novias"
+                imageSrc="/assets/seis.jpg"
+            />
+            <Card 
+                title="Maquillaje Social"
+                description="Ideal para eventos, graduaciones o una sesión de fotos. Brilla en cada ocasión."
+                link="/servicios#social"
+                imageSrc="/assets/siete.jpg"
+            />
+            <Card 
+                title="Masterclass Personalizada"
+                description="Aprende las técnicas profesionales para tu rostro en una sesión privada e intensiva."
+                link="/servicios#masterclass"
+                imageSrc="/assets/cinco.jpg"
+            />
+        </div>
+        <div class="mt-12">
+            <Button href="/servicios" variant="primary">
+                Ver Todos los Paquetes y Precios
+            </Button>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+            
+            <div class="md:w-1/2 rounded-lg shadow-2xl overflow-hidden transform hover:shadow-xl transition duration-500">
+                <Image 
+                    src={portraitImage} 
+                    alt="Retrato profesional de la maquilladora, Andrea Bazurto"
+                    class="w-full h-auto object-cover"
+                    widths={[600, 900]}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                />
+            </div>
+
+            <div class="md:w-1/2 text-left">
+                <p class="title-font text-sm uppercase tracking-widest text-pink-600 mb-3">Filosofía</p>
+                <h2 class="text-4xl title-font font-bold mb-6">"El Maquillaje es un realce, no una transformación."</h2>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Creo en un enfoque donde la belleza natural es la protagonista. Mi trabajo consiste en **resaltar tus mejores rasgos**, logrando un acabado impecable que se siente ligero, que se ve increíble en persona y es fotogénico. 
+                </p>
+                <p class="text-gray-600 mb-8 leading-relaxed italic">
+                    Utilizo únicamente productos veganos y de lujo para garantizar una durabilidad de hasta 24 horas y el máximo confort.
+                </p>
+                <Button href="/sobre-mi" variant="primary">
+                    Conoce mi Historia
+                </Button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="py-20 px-6 bg-gray-900 text-white text-center">
+        <h3 class="text-4xl title-font font-bold mb-4">¿Lista para el Look de tus Sueños?</h3>
+        <p class="text-lg mb-8 text-gray-300">Reserva tu prueba o consulta de disponibilidad para tu fecha especial.</p>
+        <Button href="/contacto" variant="inverted">
+            Reservar Ahora (¡Contacto Rápido!)
+        </Button>
+    </section>
+
+</Layout>

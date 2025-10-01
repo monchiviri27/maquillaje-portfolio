@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import heroImage from '../../public/assets/uno.jpg'; 
+
+interface Props {
+  headline: string;
+  subtext: string;
+  ctaText: string;
+  ctaLink: string;
+}
+
+const { headline, subtext, ctaText, ctaLink } = Astro.props;
+---
+
+<section class="relative min-h-[70vh] md:h-[90vh] flex items-center justify-center overflow-hidden"> 
+    
+    <div class="absolute inset-0 z-0">
+        <Image 
+            src={heroImage} 
+            alt="Maquillaje de novia profesional con un acabado elegante y natural" 
+            class="w-full h-full object-cover brightness-75 transition-transform duration-1000 ease-out hover:scale-[1.03]"
+            quality={90}
+            widths={[480, 768, 1200, 1920]}
+            sizes="(max-width: 768px) 100vw, 1920px"
+        />
+        <div class="absolute inset-0 bg-black opacity-30"></div>
+    </div>
+
+    <div class="relative z-10 text-center text-white p-6 sm:p-10 max-w-4xl whitespace-normal"> 
+        
+        <h1 
+            class="title-font text-5xl sm:text-6xl md:text-8xl font-extrabold tracking-tight mb-4 transition-opacity duration-700"
+            transition:name="hero-title"
+        >
+            {headline}
+        </h1>
+
+        <p class="text-lg md:text-2xl font-light mb-8 max-w-2xl mx-auto">
+            {subtext}
+        </p>
+
+        <a 
+            href={ctaLink} 
+            class="inline-block px-8 py-3 sm:px-10 sm:py-4 bg-white text-gray-900 title-font text-base uppercase tracking-widest font-semibold hover:bg-gray-200 transition duration-300 shadow-xl transform hover:scale-[1.05]"
+        >
+            {ctaText}
+        </a>
+    </div>
+</section>

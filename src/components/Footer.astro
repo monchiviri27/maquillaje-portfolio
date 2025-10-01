@@ -1,0 +1,119 @@
+---
+// Importamos los iconos SVG directamente
+import IconInstagram from './icons/IconInstagram.astro';
+import IconFacebook from './icons/IconFacebook.astro';
+import IconPinterest from './icons/IconPinterest.astro';
+
+// Definición de enlaces y detalles clave
+const navigationLinks = [
+    { name: 'Portafolio', href: '/portfolio' },
+    { name: 'Servicios y Tarifas', href: '/servicios' },
+    { name: 'Sobre Andrea', href: '/sobre-mi' },
+    { name: 'Contacto', href: '/contacto' },
+];
+
+const legalLinks = [
+    { name: 'Aviso Legal', href: '/legal/aviso-legal' },
+    { name: 'Política de Privacidad', href: '/legal/privacidad' },
+    { name: 'Términos de Servicio', href: '/legal/terminos' },
+];
+
+// Reemplaza estos con los enlaces reales de la maquilladora
+const socialLinks = [
+    { name: 'Instagram', icon: IconInstagram, href: 'https://instagram.com/tu_usuario' },
+    { name: 'Facebook', icon: IconFacebook, href: 'https://facebook.com/tu_pagina' },
+    { name: 'Pinterest', icon: IconPinterest, href: 'https://pinterest.com/tu_perfil' },
+];
+
+// Año actual para el copyright
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-gray-900 text-white pt-16 pb-8 border-t border-pink-600/50">
+    <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-y-10 gap-x-8 border-b border-gray-700 pb-12">
+            
+            <div class="col-span-2 lg:col-span-2">
+                <h3 class="title-font text-3xl font-extrabold mb-4 text-pink-600">Andrea Bazurto</h3>
+                <p class="text-base text-gray-400 leading-relaxed max-w-sm">
+                    Elegancia atemporal y piel radiante. Especialista en maquillaje nupcial y eventos de lujo.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-xl font-bold mb-5 title-font text-white">Explorar</h4>
+                <ul class="space-y-3">
+                    {navigationLinks.map(link => (
+                        <li>
+                            <a href={link.href} class="text-gray-400 hover:text-pink-400 transition duration-300 text-base">
+                                {link.name}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-xl font-bold mb-5 title-font text-white">Contactar</h4>
+                <ul class="space-y-3 text-base">
+                    <li class="flex items-center">
+                        <span class="mr-2 text-pink-600">✉️</span>
+                        <a href="mailto:info@andreabazurto.com" class="text-gray-400 hover:text-pink-400 transition duration-300">
+                            info@andreabazurto.com
+                        </a>
+                    </li>
+                    <li class="flex items-center">
+                         <span class="mr-2 text-pink-600">📞</span>
+                        <a href="tel:+34600000000" class="text-gray-400 hover:text-pink-400 transition duration-300">
+                            +34 600 000 000
+                        </a>
+                    </li>
+                    <li class="pt-4">
+                       <a href="/contacto" class="text-pink-400 font-bold hover:text-white transition duration-300 uppercase text-sm tracking-wider border-b border-pink-400">
+                            Reservar tu Cita
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-span-2 md:col-span-1">
+                <h4 class="text-xl font-bold mb-5 title-font text-white">Conecta</h4>
+                <div class="flex space-x-6">
+                    {socialLinks.map(link => {
+    // 🔑 Obtener el componente (que ya está en link.icon)
+    const IconComponent = link.icon; 
+    
+    return (
+        <a 
+            href={link.href} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="text-gray-400 hover:text-pink-600 transition duration-300" 
+            title={`Sigue a Andrea Bazurto en ${link.name}`}
+        >
+            {/* 🚀 Renderizar el componente dinámicamente con la sintaxis de etiqueta */}
+            <IconComponent /> 
+        </a>
+    )
+})}
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 flex flex-col-reverse md:flex-row justify-between items-center text-sm text-gray-500">
+            
+            <p class="mt-4 md:mt-0">
+                &copy; {currentYear} Andrea Bazurto. Todos los derechos reservados.
+            </p>
+
+            <div class="space-x-4">
+                {legalLinks.map(link => (
+                    <a href={link.href} class="hover:text-pink-400 transition duration-200">
+                        {link.name}
+                    </a>
+                ))}
+            </div>
+        </div>
+    </div>
+</footer>

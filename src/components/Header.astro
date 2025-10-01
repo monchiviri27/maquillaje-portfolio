@@ -1,0 +1,51 @@
+---
+// Importaciones
+import Button from './ui/Button.astro';
+import MenuButton from './MenuButton.jsx'; // 👈 Importamos la Isla de React
+
+// Definición de los enlaces de navegación
+const links = [
+    { name: 'Inicio', href: '/' },
+    { name: 'Portafolio', href: '/portfolio' },
+    { name: 'Servicios', href: '/servicios' },
+    { name: 'Sobre Mí', href: '/sobre-mi' },
+];
+
+// Enlace de Call-to-Action (CTA)
+const cta = { 
+    text: 'Reservar', 
+    href: '/contacto' 
+};
+---
+
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        
+        <a href="/" class="text-3xl font-bold title-font text-gray-900 hover:text-pink-600 transition-colors duration-300" transition:persist>
+            Andrea Bazurto
+        </a>
+
+        <nav class="hidden lg:flex items-center space-x-8">
+            {links.map((link) => (
+                <a 
+                    href={link.href} 
+                    class="text-base font-medium text-gray-700 hover:text-pink-600 transition duration-150 relative group"
+                >
+                    {link.name}
+                    <span class="absolute bottom-[-4px] left-0 w-full h-[2px] bg-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+            ))}
+        </nav>
+
+        <div class="hidden lg:block">
+            <Button href={cta.href} variant="primary">
+                {cta.text}
+            </Button>
+        </div>
+
+        <div class="lg:hidden">
+            <MenuButton links={links} cta={cta} client:load /> 
+        </div>
+
+    </div>
+</header>

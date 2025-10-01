@@ -1,0 +1,92 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+// 1. Obtener todos los trabajos del portafolio, ordenados por fecha descendente
+const portfolioEntries = await getCollection('portfolio');
+portfolioEntries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// Mapeo para obtener los tipos de maquillaje para filtros (UX)
+const uniqueTypes = [...new Set(portfolioEntries.map(entry => entry.data.type))];
+
+// Función para simplificar la obtención del tipo de look para el display
+const getLookType = (type: string) => {
+    switch (type) {
+        case 'Novia': return 'Nupcial';
+        case 'Social': return 'Eventos';
+        case 'Editorial': return 'Moda y Arte';
+        default: return 'Otros';
+    }
+};
+
+// Función para asegurar la ruta de la imagen desde /public
+const getImagePath = (path: string) => (path.startsWith('/') ? path : `/${path}`);
+---
+
+<Layout 
+    title="Portafolio de Maquillaje | Andrea Bazurto"
+    description="Explora la galería de trabajos de Andrea Bazurto, especialista en maquillaje nupcial, eventos sociales y editoriales."
+>
+    <section class="pt-32 pb-16 px-6 bg-pink-50 text-center">
+        <h1 class="text-6xl title-font font-extrabold text-gray-900 mb-4" transition:name="page-title">
+            Mi Galería de Creaciones
+        </h1>
+        <p class="text-xl text-gray-700 max-w-4xl mx-auto mb-8">
+            Aquí podrás ver una selección de mis trabajos más recientes. Desde la elegancia nupcial atemporal hasta looks audaces de editorial.
+        </p>
+    </section>
+
+    <div class="max-w-7xl mx-auto px-6 pt-12 hidden md:block">
+        <div class="flex space-x-4 border-b pb-4 mb-8">
+            <span class="text-lg font-semibold text-gray-800 mr-2">Filtrar por:</span>
+            <a href="#all" class="text-lg font-medium text-pink-600 hover:text-pink-800 transition">Todos</a>
+            {uniqueTypes.map(type => (
+                <a href={`#${type.toLowerCase()}`} class="text-lg font-medium text-gray-600 hover:text-pink-600 transition">
+                    {getLookType(type)}
+                </a>
+            ))}
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 pb-20">
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            {portfolioEntries.map(entry => (
+                <a href={`/portfolio/${entry.slug}`} class="block group relative overflow-hidden shadow-xl rounded-lg aspect-[4/5]">
+                    
+                    {/* Imagen Principal */}
+                    <img 
+                        src={getImagePath(entry.data.images[0])} 
+                        alt={entry.data.description || entry.data.title} 
+                        loading="lazy"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+
+                    {/* Overlay de Información (Hover) */}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div>
+                            <span class="text-sm font-semibold uppercase text-pink-400 mb-1 inline-block">
+                                {getLookType(entry.data.type)}
+                            </span>
+                            <h3 class="title-font text-2xl font-bold text-white leading-tight">
+                                {entry.data.title}
+                            </h3>
+                        </div>
+                    </div>
+                </a>
+            ))}
+        </div>
+
+        <section class="mt-20 text-center p-12 bg-pink-600 text-white rounded-lg shadow-2xl">
+            <h3 class="text-3xl title-font font-bold mb-4">¿Te encanta lo que ves?</h3>
+            <p class="text-lg text-pink-100 mb-8">Conversemos sobre el look perfecto para tu próximo evento.</p>
+            <a 
+                href="/contacto" 
+                class="inline-block px-8 py-3 bg-white text-gray-900 title-font text-base uppercase tracking-widest font-semibold hover:bg-gray-200 transition duration-300 shadow-xl"
+            >
+                Pedir Presupuesto
+            </a>
+        </section>
+
+    </div>
+</Layout>

@@ -1,0 +1,35 @@
+---
+interface Props {
+	href: string;
+	// Define las variantes de estilo del botón
+	variant?: 'primary' | 'secondary' | 'inverted';
+}
+
+const { href, variant = 'primary' } = Astro.props;
+
+// Clases base compartidas por todas las variantes
+const baseClasses = 'inline-block px-8 py-3 title-font text-base uppercase tracking-widest font-semibold transition-all duration-300 transform hover:scale-[1.05] rounded-sm shadow-lg';
+
+// Clases específicas de cada variante
+let variantClasses = '';
+switch (variant) {
+	case 'primary':
+		// CTA principal: Fondo oscuro, texto claro
+		variantClasses = 'bg-gray-900 text-white hover:bg-pink-600 hover:shadow-xl';
+		break;
+	case 'secondary':
+		// CTA secundaria: Borde y fondo transparente
+		variantClasses = 'bg-transparent text-gray-900 border-2 border-gray-900 hover:bg-gray-900 hover:text-white';
+		break;
+	case 'inverted':
+		// CTA sobre fondo oscuro: Fondo claro, texto oscuro (usado en la CTA final)
+		variantClasses = 'bg-white text-gray-900 hover:bg-gray-200 hover:shadow-2xl';
+		break;
+}
+
+const allClasses = `${baseClasses} ${variantClasses}`;
+---
+
+<a href={href} class={allClasses}>
+	<slot />
+</a>

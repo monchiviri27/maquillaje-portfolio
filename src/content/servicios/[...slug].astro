@@ -1,0 +1,98 @@
+---
+import { getCollection, getEntryBySlug } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/ui/Button.astro';
+import { Image } from 'astro:assets';
+
+// 1. FUNCIÓN OBLIGATORIA: Define las rutas estáticas
+// Astro usará esto para saber qué páginas construir.
+export async function getStaticPaths() {
+    // Obtenemos todas las entradas de la colección 'servicios'
+    const servicios = await getCollection('servicios');
+
+    // Mapeamos cada servicio para crear una ruta (path) con su slug
+    return servicios.map((servicio) => ({
+        params: { slug: servicio.slug }, // El slug define la URL: /servicios/slug-del-servicio
+        props: { servicio },
+    }));
+}
+
+// 2. RECIBE LAS PROPIEDADES: Definimos el tipo de las props recibidas
+interface Props {
+    servicio: Awaited<ReturnType<typeof getStaticPaths>>[number]['props']['servicio'];
+}
+
+const { servicio } = Astro.props;
+
+// 3. Renderiza el contenido del Markdown (el cuerpo del servicio)
+const { Content } = await servicio.render();
+
+// Preparamos la URL de la imagen (asumiendo que está en /public)
+// Asegura que la ruta de la imagen sea absoluta.
+const serviceImageUrl = servicio.data.image.startsWith('/') ? servicio.data.image : `/${servicio.data.image}`;
+---
+
+<Layout 
+    title={`${servicio.data.title} | Paquete de Maquillaje`}
+    description={servicio.data.shortDescription}
+>
+    <article class="max-w-7xl mx-auto px-6 py-20">
+        
+        <header class="mb-12 border-b pb-6 border-gray-200">
+            <h1 class="text-6xl title-font font-extrabold text-gray-900 mb-2">
+                {servicio.data.title}
+            </h1>
+            
+            <p class="text-3xl font-bold text-pink-600 mb-4">
+                {servicio.data.price ? servicio.data.price : 'Consulta Personalizada'}
+            </p>
+
+            <span class="inline-block px-3 py-1 text-sm font-semibold bg-pink-100 text-pink-700 rounded-full">
+                {servicio.data.category}
+            </span>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            
+            <div class="lg:col-span-1 rounded-lg overflow-hidden shadow-2xl h-fit sticky top-24">
+                <img 
+                    src={serviceImageUrl} 
+                    alt={`Imagen representativa de ${servicio.data.title}`} 
+                    class="w-full h-auto object-cover"
+                    loading="eager"
+                />
+            </div>
+
+            <div class="lg:col-span-2 prose prose-lg max-w-none text-gray-700">
+                <Content />
+                
+                <div class="mt-10 pt-6 border-t border-pink-200">
+                    <h2 class="text-3xl title-font font-bold mb-4">
+                        ¿Lista para reservar tu fecha?
+                    </h2>
+                    <p class="mb-6">
+                        Contacta ahora para una consulta de disponibilidad y para personalizar tu experiencia.
+                    </p>
+                    <Button href="/contacto" variant="primary">
+                        Reservar mi Consulta
+                    </Button>
+                </div>
+            </div>
+        </div>
+
+    </article>
+</Layout>
+
+<style>
+    /* Aplicamos estilos elegantes a los elementos Markdown para consistencia */
+    .prose h2 {
+        @apply text-4xl title-font font-bold mt-10 mb-4 text-gray-800;
+    }
+    .prose p {
+        @apply mb-4 leading-relaxed;
+    }
+    .prose ul, .prose ol {
+        /* Aseguramos que las listas tengan estilos correctos */
+        @apply list-disc list-inside space-y-2 pl-4;
+    }
+</style>

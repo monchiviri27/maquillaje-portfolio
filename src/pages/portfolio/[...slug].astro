@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+// 1. FUNCIÓN OBLIGATORIA: Define las rutas estáticas para cada look
+export async function getStaticPaths() {
+    // Obtenemos todas las entradas de la colección 'portfolio'
+    const entries = await getCollection('portfolio');
+
+    // Mapeamos cada entrada para crear una ruta con su slug
+    return entries.map((entry) => ({
+        params: { slug: entry.slug },
+        props: { entry },
+    }));
+}
+
+// 2. RECIBE LAS PROPIEDADES
+interface Props {
+    entry: Awaited<ReturnType<typeof getStaticPaths>>[number]['props']['entry'];
+}
+
+const { entry } = Astro.props;
+
+// Función para asegurar la ruta de la imagen desde /public
+const getImagePath = (path: string) => (path.startsWith('/') ? path : `/${path}`);
+---
+
+<Layout 
+    title={`${entry.data.title} | Portafolio Maquillaje`}
+    description={entry.data.description}
+>
+    <article class="max-w-7xl mx-auto px-6 py-20">
+        
+        <header class="mb-12 border-b pb-6 border-pink-100">
+            <h1 class="text-6xl title-font font-extrabold text-gray-900 mb-2">
+                {entry.data.title}
+            </h1>
+            <p class="text-xl text-gray-600 mb-4">{entry.data.description}</p>
+            
+            <span class="inline-block px-3 py-1 text-sm font-semibold bg-pink-100 text-pink-700 rounded-full">
+                {entry.data.type}
+            </span>
+            <span class="ml-4 text-sm text-gray-500">
+                Realizado el {entry.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </span>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {entry.data.images.map(imagePath => (
+                <div class="rounded-xl overflow-hidden shadow-xl aspect-square">
+                    <img 
+                        src={getImagePath(imagePath)} 
+                        alt={`Detalle del look ${entry.data.title}`}
+                        loading="lazy"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+            ))}
+        </div>
+
+        <div class="mt-16 pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center">
+            
+            <a href="/portfolio" class="text-lg font-semibold text-gray-600 hover:text-pink-600 transition mb-4 sm:mb-0">
+                ← Volver al Portafolio
+            </a>
+            
+            <a 
+                href="/contacto" 
+                class="inline-block px-8 py-3 bg-pink-600 text-white title-font text-base uppercase tracking-widest font-semibold hover:bg-pink-700 transition duration-300 rounded-sm shadow-lg"
+            >
+                Reservar Mi Look
+            </a>
+        </div>
+
+    </article>
+</Layout>

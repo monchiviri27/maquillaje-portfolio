@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/ui/Card.astro';
+import Button from '../components/ui/Button.astro';
+
+// 1. Obtener todos los servicios de la colección
+const todosLosServicios = await getCollection('servicios');
+
+// 2. Agrupar los servicios por categoría (para una mejor UX)
+const serviciosAgrupados = todosLosServicios.reduce((acc, servicio) => {
+    const categoria = servicio.data.category;
+    if (!acc[categoria]) {
+        acc[categoria] = [];
+    }
+    // Ordenar por el campo 'order'
+    acc[categoria].push(servicio);
+    acc[categoria].sort((a, b) => a.data.order - b.data.order);
+    return acc;
+}, {} as Record<string, typeof todosLosServicios>);
+
+// 3. Crear un array de categorías para iterar en orden
+const categoriasOrdenadas = ['Novias', 'Eventos', 'Masterclass']; 
+
+// Función para generar un ID limpio a partir de la categoría (para enlaces de ancla)
+const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+---
+
+<Layout 
+    title="Servicios y Tarifas | Maquillaje Nupcial y Eventos"
+    description="Descubre los paquetes de maquillaje de Andrea Bazurto: novias, sesiones de fotos, eventos sociales y clases personalizadas. Transparencia en precios."
+>
+    <section class="pt-32 pb-16 px-6 bg-gray-50 text-center">
+        <h1 class="text-6xl title-font font-extrabold text-gray-900 mb-4" transition:name="page-title">
+            Nuestros Paquetes de Lujo
+        </h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            Cada servicio está diseñado para ofrecer una experiencia personalizada, utilizando solo productos de alta gama y técnicas que garantizan un resultado impecable en cámara y en persona.
+        </p>
+        <Button href="/contacto" variant="primary">
+            Consultar Fechas Disponibles
+        </Button>
+    </section>
+
+    <div class="max-w-7xl mx-auto px-6 py-20">
+        
+        {categoriasOrdenadas.map(categoria => {
+            const servicios = serviciosAgrupados[categoria];
+            if (!servicios || servicios.length === 0) return null; // Ocultar si no hay servicios
+
+            return (
+                <section class="mb-20" id={slugify(categoria)}>
+                    <h2 class="text-5xl title-font font-bold text-gray-800 mb-10 border-b-2 border-pink-100 pb-3">
+                        {categoria}
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        {servicios.map(servicio => (
+                            <Card 
+                                title={servicio.data.title}
+                                description={servicio.data.shortDescription}
+                                link={`/servicios/${servicio.slug}`} // Enlace a la página de detalle (siguiente paso)
+                                imageSrc={servicio.data.image}
+                            >
+                                <p class="text-pink-600 font-bold mt-2">{servicio.data.price}</p>
+                            </Card>
+                        ))}
+                    </div>
+                </section>
+            );
+        })}
+
+        <section class="mt-20 text-center p-12 bg-gray-900 text-white rounded-lg shadow-2xl">
+            <h3 class="text-3xl title-font font-bold mb-4">¿Necesitas algo a medida?</h3>
+            <p class="text-lg text-gray-300 mb-8">Si no encuentras lo que buscas, hablemos de un paquete personalizado.</p>
+            <Button href="/contacto" variant="inverted">
+                Hablemos de tu Proyecto
+            </Button>
+        </section>
+
+    </div>
+</Layout>

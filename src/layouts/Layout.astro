@@ -1,0 +1,74 @@
+---
+// Importamos componentes de UI reutilizables
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// Importamos la herramienta View Transitions de Astro para animaciones de SPA
+import { ViewTransitions } from 'astro:transitions';
+
+// Definimos las propiedades (props) que recibirá el layout
+interface Props {
+	title: string;
+	description: string;
+}
+
+const { title, description } = Astro.props;
+
+// Configuración de Tipografía: Dos fuentes modernas y elegantes
+// 1. Una fuente Serif elegante para títulos (e.g., Playfair Display)
+// 2. Una fuente Sans-serif limpia y legible para cuerpo de texto (e.g., Poppins)
+const TITLE_FONT = 'Playfair Display'; 
+const BODY_FONT = 'Poppins'; 
+---
+
+<!doctype html>
+<html lang="es" class="overflow-x-hidden">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+        <title>{title} | Maquilladora Profesional</title>
+		<meta name="description" content={description} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href={`https://fonts.googleapis.com/css2?family=${TITLE_FONT.replace(' ', '+')}:ital,wght@0,400..900;1,400..900&family=${BODY_FONT.replace(' ', '+')}:wght@300;400;600&display=swap`} rel="stylesheet">
+
+        <ViewTransitions />
+	</head>
+
+	<body class={`min-h-screen antialiased bg-white text-gray-800 font-[${BODY_FONT}] overflow-x-hidden`}>
+		
+        <Header />
+
+        <main transition:animate="slide">
+			<slot />
+		</main>
+
+        <Footer />
+		
+	</body>
+</html>
+
+<style is:global>
+	/* Clase para títulos principales, usando la fuente elegante */
+	.title-font {
+		font-family: var(--title-font, '${TITLE_FONT}', serif);
+	}
+    /* El estilo global de Tailwind para aplicar a toda la página */
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+	/* Aseguramos que la fuente de título se use en los h1, h2, etc. */
+	h1, h2, h3 {
+		@apply title-font font-bold;
+	}
+
+    /* Opcional: Estilos para enlaces al usar View Transitions */
+    ::view-transition-old,
+    ::view-transition-new {
+      animation-duration: 300ms;
+    }
+</style>
