@@ -7,8 +7,13 @@ const MenuButton = ({ links, cta }) => {
     const toggleMenu = () => {
         const newState = !isOpen;
         setIsOpen(newState);
-        document.body.style.overflowY = newState ? 'hidden' : 'auto';
-        document.body.style.overflowX = 'hidden';
+        
+        // SOLUCIÓN: Solo modificar overflow cuando el menú está abierto
+        if (newState) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     };
 
     // Cerrar menú al redimensionar (si se cambia a desktop)
@@ -16,13 +21,20 @@ const MenuButton = ({ links, cta }) => {
         const handleResize = () => {
             if (window.innerWidth >= 1024 && isOpen) {
                 setIsOpen(false);
-                document.body.style.overflowY = 'auto';
+                document.body.style.overflow = ''; // Restaurar overflow
             }
         };
 
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [isOpen]);
+
+    // Cleanup al desmontar el componente
+    useEffect(() => {
+        return () => {
+            document.body.style.overflow = ''; // Asegurar que se restaure
+        };
+    }, []);
 
     return (
         <>
@@ -57,7 +69,7 @@ const MenuButton = ({ links, cta }) => {
                     isOpen ? 'translate-x-0' : 'translate-x-full'
                 }`}
                 style={{ 
-                    height: '100dvh', // Usa dynamic viewport height para móviles
+                    height: '100dvh',
                     paddingTop: 'calc(2rem + env(safe-area-inset-top, 0px))'
                 }}
             >
